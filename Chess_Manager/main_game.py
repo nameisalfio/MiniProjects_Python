@@ -101,16 +101,19 @@ def simulazione_partita():
         break
         
     print("Ora siamo pronti per iniziare\n")
-    print("Il tuo avversari gareggeranno nel seguente ordine:\n\n ")
+    print(f"Il tuo avversari '{squadra_avversaria.nome}' gareggeranno nel seguente ordine:\n ")
     display(squadra_avversaria.giocatori)
 
-    print(f"Nome della squadra: {squadra.nome} \n")
-    scelta3 = input("\nScegli l'ordine in cui devono giocare i tuoi giocatori, il primo giocatore si sfiderà contro il primo avversario, il secondo con il secondo e il terzo con il terzo\n\n")
-
+    print("\nScegli l'ordine in cui devono giocare i tuoi giocatori, il primo giocatore si sfiderà contro il primo avversario, il secondo con il secondo e il terzo con il terzo\n\n")
+    
     ordine_squadra = []
-    while len(ordine_squadra) < 3:
-
-        scelta3 = input("Seleziona un giocatore (inserisci il numero corrispondente): \n")
+    num_selezioni = 0
+    while num_selezioni < len(squadra.giocatori):
+        
+        # Visualizzo i giocatori disponibili
+        print("\nGiocatori disponibili: \n")
+        display(lista_giocatori)
+        scelta3 = input("-> Seleziona un giocatore (inserisci il numero corrispondente): \n")
         scelta3 = int(scelta3)
 
         if scelta3 < 1 or scelta3 > len(squadra.giocatori):
@@ -119,10 +122,12 @@ def simulazione_partita():
 
         tuo_giocatore_selezionato = squadra.giocatori.pop(scelta3-1)
         ordine_squadra.append(tuo_giocatore_selezionato)
-        print("La tua squadra gareggerà nel seguente ordine:\n\n ")
-        for idx, giocatore4 in enumerate(ordine_squadra, start=1):
-            print(f"{idx}. {giocatore4.nome} {giocatore4.cognome} - Elo: {giocatore4.Elo}\n")
-            print("seleziona il giocatore successivo per completare l'ordinedella tua squadra")
+        num_selezioni += 1
+        print("seleziona il giocatore successivo per completare l'ordine della tua squadra\n")
+
+    print("La tua squadra gareggerà nel seguente ordine:\n\n ")
+    for idx, giocatore4 in enumerate(ordine_squadra, start=1):
+        print(f"{idx}. {giocatore4.nome} {giocatore4.cognome} - Elo: {giocatore4.Elo}\n")
         
     return print("Inizia il torneo")
 
@@ -231,15 +236,16 @@ while len(squadra) < 3:
 squadra = Squadra(nome_squadra, squadra)
 
 print("\n\nSquadra creata con successo! I giocatori selezionati sono: \n")
-time.sleep(2)
-squadra.visualizza_informazioni_squadra()
+time.sleep(1)
+display(squadra.giocatori)
 time.sleep(1)
 
 turno = 1
 while turno < 6:
 
+    print("="*40)
+    print(f"{turno}° turno")
     mostra_menù()
-
     scelta = input("Seleziona un'opzione inserendo un numero: ")
     
     if scelta == "1":
