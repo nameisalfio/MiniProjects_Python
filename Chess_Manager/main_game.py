@@ -2,7 +2,6 @@ from giocatore import Giocatore
 from squadra import Squadra
 import random
 import time
-import sys
 
 def display(giocatori):
     i = 1
@@ -11,7 +10,41 @@ def display(giocatori):
         giocatore.visualizza_informazioni()
         i = i+1
 
-def mostra_menù():
+def crea_squadra(lista_giocatori):
+    nome_squadra = input("Inserisci il nome della tua squadra: ")
+    print("\nLa tua squadra sarà formata da 3 giocatori, il punteggio Elo della squadra non deve superare i 3000 punti Elo, scegli i tuoi giocatori con attenzione\n")
+    squadra = []
+    limite_punteggio = 3000
+
+    while len(squadra) < 3:
+
+        # Visualizzo i giocatori disponibili
+        print("Giocatori disponibili: \n")
+        display(lista_giocatori)
+
+        scelta = input("Seleziona un giocatore (inserisci il numero corrispondente): ")
+
+        while not (scelta.isdigit() and (int(scelta) >= 1 and int(scelta) <= len(lista_giocatori))):
+            print("Il valore assegnato non corrisponde con quello dell'elenco, inserisci solo i valori disponibili\n")
+            scelta = input("Seleziona un giocatore (inserisci il numero corrispondente): ")
+
+        scelta = int(scelta)
+        giocatore_selezionato = lista_giocatori[scelta-1]
+        print(f"\n --> Hai selezionato {giocatore_selezionato.nome} {giocatore_selezionato.cognome}\n\n")
+
+        punteggio_totale = sum(giocatore.Elo for giocatore in squadra) 
+        if punteggio_totale + giocatore_selezionato.Elo <= limite_punteggio:
+            squadra.append(giocatore_selezionato)
+        else:
+            print(f"\nHai superato il valore limite dei punti Elo della tua squadra, puoi raggiungere un massimo di 3000 punti Elo. Il tuo punteggio è {punteggio_totale}, scegli un altro giocatore\n")
+            time.sleep(3)
+            continue
+        
+        lista_giocatori.remove(giocatore_selezionato)
+
+    return Squadra(nome_squadra, squadra)
+
+def mostra_menu():
     print("="*40)
     print("\t\tAZIONI\n")
     print("[1]\tSimula Turno\n")
@@ -236,41 +269,10 @@ squadra_avversaria3 = Squadra(nome_squadra_avversaria3,lista_avversari3)
 limite_punteggio = 3000
 
 # Creazione squadra
-nome_squadra = input("Inserisci il nome della tua squadra: ")
-print("\nLa tua squadra sarà formata da 3 giocatori, il punteggio Elo della squadra non deve superare i 3000 punti Elo, scegli i tuoi giocatori con attenzione\n")
-squadra = []
-
-while len(squadra) < 3:
-
-    # Visualizzo i giocatori disponibili
-    print("Giocatori disponibili: \n")
-    display(lista_giocatori)
-
-    scelta = input("Seleziona un giocatore (inserisci il numero corrispondente): ")
-
-    while not (scelta.isnumeric() and (int(scelta) >= 1 and int(scelta) <= len(lista_giocatori))):
-        print("Il valora assegnato non corrisponde con quello dell'elenco, inserisci solo i valori disponibili\n")
-        scelta = input("Seleziona un giocatore (inserisci il numero corrispondente): \n")
-
-    scelta = int(scelta)
-    giocatore_selezionato = lista_giocatori[scelta-1]
-    print(f"\n --> Hai selezionato {giocatore_selezionato.nome} {giocatore_selezionato.cognome}\n\n")
-
-    punteggio_totale = sum(giocatore.Elo for giocatore in squadra) 
-    if sum(giocatore.Elo for giocatore in squadra) + giocatore_selezionato.Elo <= limite_punteggio:
-        squadra.append(giocatore_selezionato)
-
-    else:
-        print(f"\nHai superato il valore limite dei punti Elo della tua squadra,puoi raggiungere un massimo di 3000 punti Elo. Il tuo punteggio è {punteggio_totale}, scegli un altro giocatore\n")
-        time.sleep(3)
-        continue
-    
-    lista_giocatori.remove(giocatore_selezionato)
-
-squadra = Squadra(nome_squadra, squadra)
-
+squadra = crea_squadra(lista_giocatori)
 print("\nSquadra creata con successo! I giocatori selezionati sono: \n")
 time.sleep(1)
+print(f"Squadra {squadra.nome}")
 display(squadra.giocatori)
 time.sleep(1)
 
@@ -281,7 +283,7 @@ while turno <= N:
 
     print("="*40)
     print(f"{turno}° turno")
-    mostra_menù()
+    mostra_menu()
     scelta = input("Seleziona un'opzione inserendo un numero: ")
     
     if scelta == "1":
@@ -302,18 +304,16 @@ while turno <= N:
         print(f"\n\nNome della squadra: {squadra_avversaria3.nome} \n")
         display(squadra_avversaria3.giocatori)
 
-        turno += 1
         time.sleep(2)
 
     elif scelta == "3":
         print("Ecco la classifica delle squadre: \n")
         for giocatore in lista_giocatori:
             giocatore.visualizza_informazioni()
-        turno += 1
 
     elif scelta == "4":
         print("Hai selezionato il numero 4, esci dal proramma")
-        sys.exit(0) # Terminazione dell'applicativo
+        break
 
     else:
         print("scelta non valida, selezionare un opzione valida")

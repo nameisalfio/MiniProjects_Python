@@ -1,6 +1,6 @@
 class Giocatore:
     #definisco l'attributo di Giocatori
-    def __init__(self, nome , cognome, Elo ):
+    def __init__(self, nome , cognome, Elo):
         self.nome = nome
         self.cognome = cognome
         self.Elo = Elo 

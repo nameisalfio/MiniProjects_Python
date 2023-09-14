@@ -2,7 +2,7 @@ from giocatore import Giocatore
 
 class Squadra :
 
-    def __init__(self, nome_squadra, giocatori: list[Giocatore]):
+    def __init__(self, nome_squadra, giocatori):
        self.nome = nome_squadra
        self.giocatori = giocatori
     
