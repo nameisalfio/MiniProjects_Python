@@ -312,7 +312,7 @@ while turno <= N:
             giocatore.visualizza_informazioni()
 
     elif scelta == "4":
-        print("Hai selezionato il numero 4, esci dal proramma")
+        print("\nHai selezionato il numero 4, esci dal proramma")
         break
 
     else:
