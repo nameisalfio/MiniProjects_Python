@@ -10,6 +10,22 @@ def display(giocatori):
         giocatore.visualizza_informazioni()
         i = i+1
 
+def display_match():
+    print('I vari giocatori si siedono nei rispettivi posti\n')
+    print("3\n")
+    print("2\n")
+    print("1\n")
+    print("Partono i timer\n")
+    print("Spinta E3\n")
+    print("Alfiere G5, con lo scopo di inchiodare il cavallo\n")
+    print("Seguono mosse di svulippo dei pezzi\n")
+    print("L'idea del bianco è di spingere il pedone per cacciare l'arfiere\n")
+    print("Piccolo errore del bianco che passa in svantaggio\n ")
+    print("Nero porta la regina in attacco\n")
+    print("Il nero si prepara ad arroccare\n")
+    print("Sacrificio di cavallo da parte del bianco\n")
+    print("Scacco al re nero\n")
+
 def crea_squadra(lista_giocatori):
     nome_squadra = input("Inserisci il nome della tua squadra: ")
     print("\nLa tua squadra sarà formata da 3 giocatori, il punteggio Elo della squadra non deve superare i 3000 punti Elo, scegli i tuoi giocatori con attenzione\n")
@@ -53,35 +69,30 @@ def mostra_menu():
     print("[4]\tEsci\n")
     print("="*40)
 
-def determina_vincitore_tra_due(giocatore1, giocatore2, differenza_patta=50):
-    numero_casuale_giocatore1 = random.randint(1, giocatore1.Elo)
-    numero_casuale_giocatore2 = random.randint(1, giocatore2.Elo)
+def determina_vincitore_tra_squadre(squadra1, squadra2):
 
-    differenza = abs(numero_casuale_giocatore1 - numero_casuale_giocatore2)
+    for giocatore1 in squadra1.giocatori:
+        for giocatore2 in squadra2.giocatori:
+            num_casuale_giocatore1 = random.randint(1, giocatore1.Elo)
+            num_casuale_giocatore2 = random.randint(1, giocatore2.Elo)
 
-    if differenza < differenza_patta:
-        risultato = "Pareggio"
-    elif numero_casuale_giocatore1 > numero_casuale_giocatore2:
-        risultato = giocatore1
-    else:
-        risultato = giocatore2
+            differenza = abs(num_casuale_giocatore1 - num_casuale_giocatore2)
 
-    return risultato
+            if differenza < 50:
+                squadra1.punteggio += 10
+                squadra2.punteggio += 10
+            elif num_casuale_giocatore1 > num_casuale_giocatore2:
+                squadra1.punteggio += 100
+            else:
+                squadra2.punteggio += 100
 
-def determina_vincitore_tra_squadre(squadra1, squadra_avversaria1):
-    vincitori_individuali = []
-    #non so perchè ma non riesco a far funzionare questa parte
-    for i in range(3):
-        vincitore_giocatore = determina_vincitore_tra_due(squadra_avversaria1.giocatori[i], squadra1.giocatori[i], differenza_patta=30)
-        vincitori_individuali.append(vincitore_giocatore)
+    # Simulazione di una partita a schermo
+    display_match()
 
-    punteggio_squadra1 = sum(g.Elo for g in vincitori_individuali if g in squadra1.giocatori)
-    punteggio_squadra2 = sum(g.Elo for g in vincitori_individuali if g in squadra_avversaria1.giocatori)
-
-    if punteggio_squadra1 > punteggio_squadra2:
+    if squadra1.punteggio > squadra2.punteggio:
         return squadra1.nome
-    elif punteggio_squadra2 > punteggio_squadra1:
-        return squadra_avversaria1.nome
+    elif squadra1.punteggio < squadra2.punteggio:
+        return squadra2.nome
     else:
         return "Pareggio"
 
@@ -193,45 +204,19 @@ def simulazione_partita():
     print("Inizia il torneo")
     print("="*30)
 
-# DA QUI DEVO ANCORA VEDERLO ##################################################################################################
-    print('I vari giocatori si siedono nei rispettivi posti\n')
-    print("3\n")
-    print("2\n")
-    print("1\n")
-    print("Partono i timer\n")
-    print("Spinta E3\n")
-    print("Alfiere G5, con lo scopo di inchiodare il cavallo\n")
-    print("Seguono mosse di svulippo dei pezzi\n")
-    print("L'idea del bianco è di spingere il pedone per cacciare l'arfiere\n")
-    print("Piccolo errore del bianco che passa in svantaggio\n ")
-    print("Nero porta la regina in attacco\n")
-    print("Il nero si prepara ad arroccare\n")
-    print("Sacrificio di cavallo da parte del bianco\n")
-    print("Scacco al re nero\n")
-    
-    # Esegui le sfide tra le squadre
     squadra.giocatori = ordine_squadra
     vincitore_squadre = determina_vincitore_tra_squadre(squadra, squadra_avversaria1)
-    vincitore_finale = determina_vincitore_tra_squadre(vincitore_squadre, squadra_avversaria2)
 
-    # Stampa il risultato
-    if vincitore_finale == "Pareggio":
-        print("La partita è finita in pareggio tra le squadre.")
+    print("="*30)
+    print("Finisce il torneo")
+    print("="*30)
+    
+    if vincitore_squadre == "Pareggio":
+        print("--> La partita è finita in pareggio tra le squadre\n")
     else:
-        print(f"La squadra vincitrice è {vincitore_finale}")
+        print(f"--> La squadra vincitrice è {vincitore_squadre}")
+    print()
 
-    # Controlla se ci sono almeno due squadre con lo stesso punteggio Elo più alto
-    squadre = [Squadra("Tua Squadra", lista_giocatori), squadra_avversaria1, squadra_avversaria2, squadra_avversaria3]
-    squadre.sort(key=lambda squadra: sum(g.Elo for g in squadra.giocatori), reverse=True)
-
-    if squadre[0].nome == squadre[1].nome:
-        print(f"Ulteriore sfida tra i due giocatori migliori di {squadre[0].nome} e {squadre[1].nome}")
-        vincitore_sfida = determina_vincitore_tra_due(squadre[0].giocatori[0], squadre[1].giocatori[0], differenza_patta=30)
-        if vincitore_sfida == "Pareggio":
-            print("La sfida è finita in pareggio.")
-        else:
-            print(f"Il vincitore della sfida è {vincitore_sfida}")
-# FINO A QUI #################################################################################################################
 
 
 # START
@@ -270,9 +255,10 @@ limite_punteggio = 3000
 
 # Creazione squadra
 squadra = crea_squadra(lista_giocatori)
-print("\nSquadra creata con successo! I giocatori selezionati sono: \n")
+print("\nSquadra creata con successo!\n")
 time.sleep(1)
 print(f"Squadra {squadra.nome}")
+print()
 display(squadra.giocatori)
 time.sleep(1)
 
@@ -307,9 +293,21 @@ while turno <= N:
         time.sleep(2)
 
     elif scelta == "3":
-        print("Ecco la classifica delle squadre: \n")
-        for giocatore in lista_giocatori:
-            giocatore.visualizza_informazioni()
+        print("Ecco la classifica delle squadre: ")
+
+        print(f"\n\nNome della squadra: {squadra.nome} \n")
+        print(f"Punti: {squadra.punteggio}")
+
+        print(f"\n\nNome della squadra: {squadra_avversaria1.nome} \n")
+        print(f"Punti: {squadra_avversaria1.punteggio}")
+
+        print(f"\n\nNome della squadra: {squadra_avversaria2.nome} \n")
+        print(f"Punti: {squadra_avversaria2.punteggio}")
+
+        print(f"\n\nNome della squadra: {squadra_avversaria3.nome} \n")
+        print(f"Punti: {squadra_avversaria3.punteggio}")
+
+        time.sleep(2)
 
     elif scelta == "4":
         print("\nHai selezionato il numero 4, esci dal proramma")
